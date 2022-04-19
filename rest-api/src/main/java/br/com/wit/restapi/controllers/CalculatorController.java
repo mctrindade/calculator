@@ -24,7 +24,7 @@ public class CalculatorController {
 	@ApiOperation(value = "Operation of sum")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Result of the sum"),
 			@ApiResponse(code = 404, message = "Operation invalid") })
-	@GetMapping(path = "sum", produces = "application/json", consumes = "application/json")
+	@GetMapping("sum")
 	public ResponseEntity<BigDecimal> sum(@RequestParam BigDecimal a, @RequestParam BigDecimal b)  {
 		
 		BigDecimal result = calculatorService.sum(a, b, "");
