@@ -24,10 +24,6 @@ public class OperacaoService {
 		case MULTIPLY:
 			return operacaoDto.getValueA().multiply(operacaoDto.getValueB());
 		case DIVIDE:
-			if (operacaoDto.getValueB().equals(BigDecimal.ZERO)) {
-				LOGGER.error("[Project Calculator API] - method calculate [Division by zero is not allowed]");
-				throw new ArithmeticException("Division by zero is not allowed");
-			}
 			return operacaoDto.getValueA().divide(operacaoDto.getValueB(), RoundingMode.HALF_EVEN);
 		default:
 			LOGGER.error("[Project Calculator API] - method calculate [Operation not found]");

@@ -1,7 +1,6 @@
 package br.com.wit.restapi.services;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,7 @@ public class CalculatorService {
 	 * @return somatorio dos valores
 	 */
 	public BigDecimal sum(BigDecimal a, BigDecimal b, String token) {
-		Message message = getMessage(a, b, OperacaoEnum.SUM);
+		Message message = getMessage(a, b, token, OperacaoEnum.SUM);
 		
 		return (BigDecimal) rabbitTemplate.convertSendAndReceive(RabbitMQConfig.EXCHANGE_NAME,
 				RabbitMQConfig.ROUTING_KEY, message);
@@ -48,7 +47,7 @@ public class CalculatorService {
 	 * @return subtração dos valores
 	 */
 	public BigDecimal subtract(BigDecimal a, BigDecimal b, String token) {
-		Message message = getMessage(a, b, OperacaoEnum.SUBTRACT);
+		Message message = getMessage(a, b, token, OperacaoEnum.SUBTRACT);
 		
 		return (BigDecimal) rabbitTemplate.convertSendAndReceive(RabbitMQConfig.EXCHANGE_NAME,
 				RabbitMQConfig.ROUTING_KEY, message);
@@ -62,7 +61,7 @@ public class CalculatorService {
 	 * @return multiplicação dos valores
 	 */
 	public BigDecimal multiply(BigDecimal a, BigDecimal b, String token) {
-		Message message = getMessage(a, b, OperacaoEnum.MULTIPLY);
+		Message message = getMessage(a, b, token, OperacaoEnum.MULTIPLY);
 
 		return (BigDecimal) rabbitTemplate.convertSendAndReceive(RabbitMQConfig.EXCHANGE_NAME,
 				RabbitMQConfig.ROUTING_KEY, message);
@@ -75,7 +74,7 @@ public class CalculatorService {
 	 * @return divisão dos valores
 	 */
 	public BigDecimal divide(BigDecimal a, BigDecimal b, String token) {
-		Message message = getMessage(a, b, OperacaoEnum.DIVIDE);
+		Message message = getMessage(a, b, token, OperacaoEnum.DIVIDE);
 
 		return (BigDecimal) rabbitTemplate.convertSendAndReceive(RabbitMQConfig.EXCHANGE_NAME,
 				RabbitMQConfig.ROUTING_KEY, message);
@@ -86,12 +85,12 @@ public class CalculatorService {
 	 * Metodo responsavel por realizar a divisão 
 	 * @param a - primeiro valor numerico
 	 * @param b - segundo valor numerico
+	 * @param token - 
 	 * @param operacao - operacao da calculadora
 	 * @return {@link Message} objeto de mensagem
 	 */
-	private Message getMessage(BigDecimal a, BigDecimal b, OperacaoEnum operacao) {
+	private Message getMessage(BigDecimal a, BigDecimal b, String token, OperacaoEnum operacao) {
 		String json = getJsonOfOperacaoDto(a, b, operacao);
-		String token = UUID.randomUUID().toString().toUpperCase();
 		LOGGER.info("[Project Rest API] - method getMessage [json {} | token {}]", json, token);
 		return MessageBuilder.withBody(json.getBytes()).setHeader("token", token).build();
 	}

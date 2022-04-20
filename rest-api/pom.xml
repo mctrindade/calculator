@@ -12,7 +12,8 @@
 	<artifactId>rest-api</artifactId>
 	<name>rest-api</name>
 
-	<description>REST API que expõe as operações de soma, subtracção, multiplicação e divisão.</description>
+	<description>REST API que expõe as operações de soma, subtracção,
+		multiplicação e divisão.</description>
 
 	<dependencies>
 		<dependency>
@@ -33,6 +34,17 @@
 			<version>3.0.0</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.sling/org.apache.sling.extensions.slf4j.mdc -->
+		<dependency>
+			<groupId>org.apache.sling</groupId>
+			<artifactId>org.apache.sling.extensions.slf4j.mdc</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
