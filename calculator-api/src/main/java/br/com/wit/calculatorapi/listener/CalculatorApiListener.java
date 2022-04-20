@@ -1,5 +1,7 @@
 package br.com.wit.calculatorapi.listener;
 
+import java.math.BigDecimal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -9,7 +11,6 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.wit.calculatorapi.config.RabbitMQConfig;
@@ -19,26 +20,23 @@ import br.com.wit.calculatorapi.service.OperacaoService;
 @Component
 public class CalculatorApiListener {
 	
-	private static final Logger log = LoggerFactory.getLogger(CalculatorApiListener.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CalculatorApiListener.class);
 	@Autowired
 	private OperacaoService operacaoService;
 	
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
-    public void receive(Message message , @Header("token") String token) {
+    public BigDecimal receive(Message message , @Header("token") String token) {
     	
     	String fileBody= new String(message.getBody());
     	
-    	log.info("Message " + fileBody+ " token:"+token);
+    	LOGGER.info("[Project Calculator API] - method receive [json {} | token {}]", fileBody, token);
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			OperacaoCalculatorDTO operacao = mapper.readValue(fileBody, OperacaoCalculatorDTO.class);
-			operacaoService.calcular(operacao);
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			OperacaoCalculatorDTO operacaoDto = mapper.readValue(fileBody, OperacaoCalculatorDTO.class);
+			LOGGER.info("[Project Calculator API] - method receive [OperacaoCalculatorDTO {}]", operacaoDto.toString());
+			return operacaoService.calculate(operacaoDto);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("Erro ao converter objeto em json", e);
 		}
     }
 
